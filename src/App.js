@@ -12,7 +12,6 @@ import NewForum from "./pages/NewForum"
 import NewScp from "./pages/NewScp"
 
 import ScpNav from "./components/ScpNav"
-import ScpSidebar from "./components/ScpSideBar"
 import ScpFooter from "./components/ScpFooter"
 
 
@@ -21,7 +20,6 @@ function App() {
     <Router>
       <Container>
         <ScpNav />
-        <ScpSidebar />
         <Route path="/" exact component={Home} />
         {/* Post pages */}
         <Route path="/new/forum" exact component={NewForum} />

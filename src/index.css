@@ -2,6 +2,19 @@
     width: 5.5rem
 }
 
+#ScpGithubFooter{
+    margin-top: -0.8rem;
+    margin-bottom: 3px
+}
+
+footer {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  text-align: center;
+}
+
 .ScpNavButton{
     width: 5rem !important;
     background-color: black !important;
