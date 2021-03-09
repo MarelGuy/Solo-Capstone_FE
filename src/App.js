@@ -1,5 +1,8 @@
 import './index.css';
+
 import { BrowserRouter as Router, Route } from "react-router-dom"
+import { Container } from 'react-bootstrap';
+
 import Home from "./pages/Home"
 import Login from "./pages/Login"
 import Scpage from "./pages/Scpage"
@@ -7,12 +10,18 @@ import Signup from "./pages/Signup"
 import ForumPage from "./pages/ForumPage"
 import NewForum from "./pages/NewForum"
 import NewScp from "./pages/NewScp"
-import { Container } from 'react-bootstrap';
+
+import ScpNav from "./components/ScpNav"
+import ScpSidebar from "./components/ScpSideBar"
+import ScpFooter from "./components/ScpFooter"
+
 
 function App() {
   return (
     <Router>
       <Container>
+        <ScpNav />
+        <ScpSidebar />
         <Route path="/" exact component={Home} />
         {/* Post pages */}
         <Route path="/new/forum" exact component={NewForum} />
@@ -24,6 +33,7 @@ function App() {
         <Route path="/scp/:id" exact component={Scpage} />
         <Route path="/forum/:id" exact component={ForumPage} />
       </Container>
+      <ScpFooter />
     </Router>
   );
 }

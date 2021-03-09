@@ -1,0 +1,14 @@
+#ScpNavImg{
+    width: 5.5rem
+}
+
+.ScpNavButton{
+    width: 5rem !important;
+    background-color: black !important;
+    border-color: black !important
+}
+
+.ScpNavButton:hover{
+    background-color: rgb(49, 49, 49) !important;
+    border-color: rgb(49, 49, 49) !important
+}
