@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Nav, Navbar, NavDropdown, Button, Row, Col } from "react-bootstrap";
-import NavLogo from "./NavLogo.png";
+import NavLogo from "../assets/images/logos/NavLogo.png";
 
 function ScpNav() {
     const [activeDropdown, setActiveDropdown] = useState('');

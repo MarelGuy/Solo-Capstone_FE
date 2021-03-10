@@ -5,7 +5,7 @@ class ScpFooter extends PureComponent {
         return (
             <footer>
                 <p>Powered by <a href="https://www.twitch.tv/marelguy">twitch.tv/marelguy</a></p>
-                <p id="ScpGithubFooter" ><a href="github.com/MarelGuy">GitHub</a></p>
+                <p id="ScpGithubFooter" ><a href="https://www.github.com/MarelGuy">GitHub</a></p>
             </footer>
         )
     }
