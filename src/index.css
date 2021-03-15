@@ -1,3 +1,8 @@
+body{
+  padding: 0px !important;
+  margin: 0px !important
+}
+
 #ScpNavImg{
     width: 5.5rem
 }
@@ -12,25 +17,105 @@
   overflow-y: scroll;
 }
 
+#ScpPageSideBar{
+  margin-left: 7.5px !important;
+}
+
+#ScpMarginMe{
+  margin-bottom: 15px !important;
+}
+
+#ScpUnmarginMe{
+  margin-bottom: -10px !important;
+}
+
+#ScpNavForm{
+  width:8rem;
+  margin-right: -4rem !important;
+}
+
+#ScpNavButton{
+  width:8rem;
+  margin-right: -4rem !important;
+  color: white;
+  background-color: black !important;
+  border-color: black !important
+}
+
+#ScpNavNav{
+  margin-right: -5vw;
+}
+
+#NewScpPage{
+  margin-left: 15px !important
+}
+
+#ScpFButton{
+  width: 7rem;
+  border-radius: 5px !important;
+  background-color: black !important;
+  border-color: black !important
+}
+#ScpLButton{
+  width: 4.4rem;
+  border-radius: 5px !important;
+  background-color: black !important;
+  border-color: black !important
+}
+
 footer {
-  position: fixed;
   left: 0;
   bottom: 0;
   width: 100%;
   text-align: center;
 }
 
+.ScpGreyAnchor{
+  color: grey !important;
+}
+
 .ScpNavButton{
-    width: 5rem !important;
-    background-color: black !important;
-    border-color: black !important
+  width: 6rem !important;
+  background-color: black !important;
+  border-color: black !important
 }
 
 .ScpNavButton:hover{
-    background-color: rgb(49, 49, 49) !important;
-    border-color: rgb(49, 49, 49) !important
+  background-color: rgb(49, 49, 49) !important;
+  border-color: rgb(49, 49, 49) !important
 }
 
 .NewScpsH2{
   margin-top: 5px
+}
+
+.ScpAnchors{
+  font-weight: 600 !important;
+  font-size: 15px !important
+}
+
+.ScpObjects{
+  font-weight: 400 !important;
+}
+
+.ScpRuleList{
+  list-style: none;
+  overflow: hidden
+}
+
+.ScpNavTitle{
+  margin-left: 10px !important
+}
+
+.ScpLogUp{
+  border-radius: 5px !important;
+  background-color: black !important;
+  border-color: black !important
+}
+
+.ScpEDButton{
+  width: 100%;
+  border-radius: 5px !important;
+  background-color: black !important;
+  border-color: black !important
 }
