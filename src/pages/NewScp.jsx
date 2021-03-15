@@ -1,100 +1,131 @@
 import React, { PureComponent } from 'react'
 import { Col, Row, Form, Button } from 'react-bootstrap';
+import MarkdownIt from 'markdown-it'
+import MdEditor from 'react-markdown-editor-lite'
+import 'react-markdown-editor-lite/lib/index.css';
 import axios from 'axios';
+import { Redirect } from "react-router-dom"
 class NewScp extends PureComponent {
     constructor(props) {
         super(props)
         this.state = {
-            user: "",
+            user: {},
+            content: "",
             item: "",
-            objectClass: "",
-            description: "",
-            containmentProcedures: "",
-            imagePreview: "",
-            image: ""
+            redirect: false,
+            scpId: ""
         }
     }
 
-    onChangeHanlder = (e) => {
-        if (e.target.name === "image") {
-            this.setState({ imagePreview: URL.createObjectURL(e.target.files[0]) });
-            this.setState({ image: e.target.files[0] });
-        } else {
-            this.setState({ [e.target.name]: e.target.value });
+    componentDidMount() {
+        const accessToken = localStorage.getItem("accessToken")
+        const refreshToken = localStorage.getItem("refreshToken")
+        const config = {
+            headers: {
+                accessToken: accessToken,
+                refreshToken: refreshToken,
+            }
         }
+        axios.get("http://localhost:3005/user/me", config)
+            .then((res) => {
+                this.setState({ user: res.data })
+            })
     }
 
-    onChangeImageHandler = (e) => {
+    onFormChangeHandler = (e) => {
+        this.setState({ content: e.html })
+    }
+
+    onItemChangeHandler = (e) => {
+        this.setState({ item: e.target.value });
     }
 
     onSubmitHandler = async (e) => {
         e.preventDefault();
-        const formData = new FormData();
-        formData.append('user', this.state.user);
-        formData.append('item', this.state.item)
-        formData.append('objectClass', this.state.objectClass);
-        formData.append('description', this.state.description);
-        formData.append('containmentProcedures', this.state.containmentProcedures);
-        formData.append('image', this.state.image);
+        const rawBody = {
+            user: this.state.user._id,
+            content: this.state.content,
+            item: this.state.item
+        }
+        const body = JSON.stringify(rawBody)
         const config = {
             headers: {
-                'content-type': 'multipart/form-data'
+                'content-type': 'application/json'
             }
         };
-        axios.post("http://127.0.0.1:3005/scp/", await formData, config)
-            .then((response) => {
-                alert("The file is successfully uploaded");
+        axios.post("http://127.0.0.1:3005/scp/", body, config)
+            .then((res) => {
+                this.setState({ scpId: res.data, redirect: true })
             }).catch((error) => {
+                console.log(error);
             });
     }
 
-
     render() {
-        const { user, item, objectClass, description, containmentProcedures, imagePreview } = this.state
+        const mdParser = new MarkdownIt()
+        const { item, redirect, scpId } = this.state
         return (
-            <div>
-                <Row>
-                    <Col>
-                        <h2 className="NewScpsH2">Create a new scp</h2>
-                        <p>Do you want to create an SCP? Well, you can, but you need to follow some rules.
-                        Your new SCP must have a new item number, an example would be:
-                        If your new SCP it's SCP-012, but we have SCP-012 and SCP-013, then you need to create SCP-014.
-                        The description must meet the object class, you shouldn't write that an SCP kills everyone but it's a safe/thaumiel class.
+            <div id="NewScpPage">
+                <div>{redirect === false ? "" : <Redirect to={"/scp/" + scpId} />}</div>
+                <Form>
+                    <Row>
+                        <Col>
+                            <h2 className="NewScpsH2">Create a new scp</h2>
+                            <p>Do you want to create an SCP? Well, you can, but you need to follow some rules.
+                            Your new SCP must have a new item number, an example would be:
+                            If your new SCP it's SCP-012, but we have SCP-012 and SCP-013, then you need to create SCP-014.
+                            The description must meet the object class, you shouldn't write that an SCP kills everyone but it's a safe/thaumiel class.
                         Containment procedures are not strictly needed, but still, we suggest to put them in. </p>
-                        <h2 className="NewScpsH2">Image upload preview: </h2>
-                        <img src={imagePreview} alt="" width="70%" />
-                    </Col>
-                    <Col>
-                        <h2 className="NewScpsH2">New SCP:</h2>
-                        <Form>
-                            <Form.Group>
-                                <Form.Label>User</Form.Label>
-                                <Form.Control placeholder="Your username" name="user" value={user} required onChange={(e) => { this.onChangeHanlder(e) }} />
-                            </Form.Group>
-                            <Form.Group>
-                                <Form.Label>Item number</Form.Label>
-                                <Form.Control placeholder="SCP number" name="item" value={item} required onChange={(e) => { this.onChangeHanlder(e) }} />
-                            </Form.Group>
-                            <Form.Group >
-                                <Form.Label>Object Class</Form.Label>
-                                <Form.Control placeholder="SCP Object Class" name="objectClass" value={objectClass} required onChange={(e) => { this.onChangeHanlder(e) }} />
-                            </Form.Group>
-                            <Form.Group>
-                                <Form.Label>Description</Form.Label>
-                                <Form.Control placeholder="SCP description" name="description" value={description} required onChange={(e) => { this.onChangeHanlder(e) }} />
-                            </Form.Group>
-                            <Form.Group>
-                                <Form.Label>Containment Procedures</Form.Label>
-                                <Form.Control placeholder="Containment procedures for your SCP" name="containmentProcedures" value={containmentProcedures} onChange={(e) => { this.onChangeHanlder(e) }} />
-                            </Form.Group>
-                            <Form.Group>
-                                <input type="file" name="image" onChange={(e) => { this.onChangeHanlder(e) }} />
-                            </Form.Group>
-                            <Button onClick={(e) => { this.onSubmitHandler(e) }} href="/login">Submit</Button>
-                        </Form>
-                    </Col>
-
-                </Row>
+                        </Col>
+                        <Col>
+                            <Row>
+                                <Col>
+                                    <h2 className="NewScpsH2">Rules:</h2>
+                                    <p> An SCP MUST have</p>
+                                    <span className="ScpRuleList" >
+                                        <li>- An item number</li>
+                                        <li>- An object class</li>
+                                        <li>- A description</li>
+                                    </span>
+                                </Col>
+                                <Col>
+                                    <br />
+                                    <br />
+                                    <p> An SCP CAN have</p>
+                                    <span className="ScpRuleList" >
+                                        <li>- Containment procedures</li>
+                                        <li>- Addendums and Documents</li>
+                                    </span>
+                                </Col>
+                                <Col>
+                                    <br />
+                                    <br />
+                                    <p> An SCP CAN'T have</p>
+                                    <span className="ScpRuleList" >
+                                        <li>- An object class</li>
+                                        <li>- The same item number as another scp</li>
+                                    </span>
+                                </Col>
+                            </Row>
+                        </Col>
+                    </Row>
+                    <Form.Group>
+                        <MdEditor
+                            style={{ height: "500px" }}
+                            renderHTML={(text) => mdParser.render(text)}
+                            onChange={(e) => this.onFormChangeHandler(e)}
+                        />
+                    </Form.Group>
+                    <Form.Group as={Row} controlId="formHorizontalEmail">
+                        <Form.Label column sm={2}>Item number:</Form.Label>
+                        <Col sm={8.5}>
+                            <Form.Control value={item} required onChange={(e) => this.onItemChangeHandler(e)} />
+                        </Col>
+                        <Col >
+                            <Button className="ScpNavButton" onClick={(e) => { this.onSubmitHandler(e) }}>Submit</Button>
+                        </Col>
+                    </Form.Group >
+                </Form>
             </div >
         )
     }
