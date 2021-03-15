@@ -27,14 +27,14 @@ class Scpage extends PureComponent {
                 refreshToken: refreshToken
             }
         }
-        axios.get("http://localhost:3005/scp/" + id)
+        axios.get(process.env.REACT_APP_API_URL + "/scp/" + id)
             .then((res) => {
                 this.setState({ scp: res.data, isLoading: false })
             })
             .catch((error) => {
                 console.log(error)
             })
-        axios.get("http://localhost:3005/user/me", config)
+        axios.get(process.env.REACT_APP_API_URL + "/user/me", config)
             .then((res) => {
                 this.setState({ user: res.data })
             })
@@ -67,7 +67,7 @@ class Scpage extends PureComponent {
 
     onUnlikeHandler = async (e, like) => {
         const id = this.props.match.params.id
-        axios.delete("http://localhost:3005/scp/like/" + id + "/" + like._id)
+        axios.delete(process.env.REACT_APP_API_URL + "/scp/like/" + id + "/" + like._id)
             .then((res) => {
                 if (res)
                     window.location.reload(true)
@@ -87,7 +87,7 @@ class Scpage extends PureComponent {
                 'content-type': 'application/json'
             }
         };
-        axios.post("http://localhost:3005/user/fav/" + userId, body, config)
+        axios.post(process.env.REACT_APP_API_URL + "/user/fav/" + userId, body, config)
             .then((res) => {
                 if (res)
                     window.location.reload(true)
@@ -99,7 +99,7 @@ class Scpage extends PureComponent {
     onUnfavouriteHandler = async (e, isFav) => {
         const userId = this.state.user._id
         const id = isFav._id
-        axios.delete("http://localhost:3005/user/fav/" + userId + "/" + id,)
+        axios.delete(process.env.REACT_APP_API_URL + "/user/fav/" + userId + "/" + id,)
             .then((res) => {
                 if (res)
                     window.location.reload(true)
@@ -110,7 +110,7 @@ class Scpage extends PureComponent {
 
     onDeleteHandler = async (e) => {
         const id = this.props.match.params.id
-        axios.delete("http://localhost:3005/scp/" + id)
+        axios.delete(process.env.REACT_APP_API_URL + "/scp/" + id)
             .then((res) => {
                 this.setState({ redirect: true })
             }).catch((error) => {

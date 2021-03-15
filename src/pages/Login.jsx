@@ -32,7 +32,7 @@ class Login extends PureComponent {
             password: this.state.password
         }
         const body = JSON.stringify(rawBody)
-        axios.post("http://localhost:3005/user/login", body, config)
+        axios.post(process.env.REACT_APP_API_URL + "/user/login", body, config)
             .then((response) => {
                 setTimeout(this.redirectState, 0)
                 this.setState({ registered: true });

@@ -17,7 +17,7 @@ class NewForum extends PureComponent {
                 refreshToken: refreshToken,
             }
         }
-        axios.get("http://localhost:3005/user/me", config)
+        axios.get(process.env.REACT_APP_API_URL + "/user/me", config)
             .then((res) => {
                 this.setState({ user: res.data })
             })

@@ -16,7 +16,7 @@ class DocumentPage extends PureComponent {
     componentDidMount() {
         const docId = this.props.match.params.docId;
         const scpId = this.props.match.params.scpId;
-        axios.get(`http://localhost:3005/scp/${scpId}`).then((res) => {
+        axios.get(process.env.REACT_APP_API_URL + `/scp/${scpId}`).then((res) => {
             const document = res.data.linked_Documents.find(doc => doc._id === docId)
             this.setState({ document, isLoading: false });
         });
@@ -28,7 +28,7 @@ class DocumentPage extends PureComponent {
                 refreshToken: refreshToken,
             }
         }
-        axios.get("http://localhost:3005/user/me", config)
+        axios.get(process.env.REACT_APP_API_URL + "/user/me", config)
             .then((res) => {
                 this.setState({ user: res.data })
             })

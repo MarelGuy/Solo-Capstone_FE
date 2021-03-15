@@ -34,7 +34,7 @@ class Signup extends PureComponent {
             avatar: "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fiupac.org%2Fwp-content%2Fuploads%2F2018%2F05%2Fdefault-avatar.png&f=1&nofb=1"
         }
         const body = JSON.stringify(rawBody)
-        axios.post("http://localhost:3005/user/register", body, config)
+        axios.post(process.env.REACT_APP_API_URL + "/user/register", body, config)
             .then((response) => {
             }).catch((error) => {
                 console.log(error);
