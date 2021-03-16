@@ -145,7 +145,7 @@ class Scpage extends PureComponent {
             }
         }
         const isAuthor = () => {
-            if (scp.user === undefined) {
+            if (scp.user === undefined || scp.user === null) {
             } else {
                 if (scp.user._id === user._id) {
                     return (
