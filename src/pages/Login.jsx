@@ -53,8 +53,8 @@ class Login extends PureComponent {
     render() {
         const { email, password, redirect, failed } = this.state
         return (
-            <Row className="justify-content-md-center" style={{ marginTop: '10%' }}>
-                <div>{redirect === false ? "" : <Redirect to="/" />}</div>
+            <Row className="justify-content-md-center" style={{ marginTop: '12%' }}>
+                <div>{redirect === false ? "" : <Redirect to="/home" />}</div>
                 <Col md={6}>
                     <Card style={{ width: '100%' }}>
                         <Row className="justify-content-md-center" style={{ marginTop: '5%' }}>
@@ -91,6 +91,8 @@ class Login extends PureComponent {
                                     <Col sm={6}>{failed === false ? "" : <p style={{ color: 'red', marginTop: '-5px', marginBottom: '-5px' }}>Login failed. <br />Email or password are wrong</p>}</Col>
                                 </Row>
                             </Form>
+                            <hr />
+                            <h6 className="text-center"><a href="/signup">Not registered yet? Register now.</a></h6>
                         </Card.Body>
                     </Card>
                 </Col>

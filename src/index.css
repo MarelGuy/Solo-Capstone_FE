@@ -3,13 +3,12 @@ body{
   margin: 0px !important
 }
 
-#ScpNavImg{
-    width: 5.5rem
+a{
+  text-decoration: none !important;
 }
 
-#ScpGithubFooter{
-    margin-top: -0.8rem;
-    margin-bottom: 3px
+#ScpNavImg{
+    width: 5.5rem
 }
 
 #ScpPostDropdown {
@@ -64,9 +63,7 @@ body{
 }
 
 footer {
-  left: 0;
-  bottom: 0;
-  width: 100%;
+  width: 99% !important;
   text-align: center;
 }
 
@@ -113,9 +110,24 @@ footer {
   border-color: black !important
 }
 
-.ScpEDButton{
+.EDButton{
   width: 100%;
   border-radius: 5px !important;
   background-color: black !important;
   border-color: black !important
 }
+
+.UPImg{
+  min-width: 60%;
+  max-width: 15vw;
+}
+
+.SCPSearchComponent{
+  margin-bottom: 5px !important;
+  color: black !important;
+}
+
+.SCPSearchComponent:hover{
+  background-color: rgb(230, 230, 230) !important;
+}
+

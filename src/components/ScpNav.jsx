@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from "react";
-import { Nav, Navbar, NavDropdown, Button, Row, Col, FormControl } from "react-bootstrap";
+import React, { useState, useEffect, useRef } from "react";
+import { Nav, Navbar, NavDropdown, Button, Row, Col, FormControl, Overlay, Tooltip } from "react-bootstrap";
 import NavLogo from "../assets/images/logos/NavLogo.png";
 import axios from "axios"
+import { Redirect } from 'react-router-dom'
 
 function ScpNav() {
     const [activeDropdown, setActiveDropdown] = useState('');
@@ -13,6 +14,10 @@ function ScpNav() {
     };
     const [user, setUser] = useState({})
     const [isLoading, setIsLoading] = useState(true)
+    const [search, setSearch] = useState('')
+    const [redirect, setredirect] = useState(false)
+    const [tooltip, setTooltip] = useState(false)
+    const target = useRef(null);
 
     useEffect(() => {
         const accessToken = localStorage.getItem("accessToken")
@@ -30,12 +35,24 @@ function ScpNav() {
             })
     }, [])
 
+    const onSearchHandler = async (e) => {
+        e.preventDefault(e)
+        if (search.length > 0) {
+            await setredirect(true)
+            window.location.reload()
+        }
+        else {
+            setTooltip(!tooltip)
+            setTimeout(() => { setTooltip(false) }, 2500)
+        }
+    }
 
     return (
         <div>
+            {redirect === true ? <Redirect to={`/search/${search}`} /> : ""}
             {isLoading === true
                 ? <Navbar bg="light" expand="lg" >
-                    <Navbar.Brand href="/">
+                    <Navbar.Brand href="/home">
                         <Row>
                             <Col sm={3}>
                                 <img id="ScpNavImg" src={NavLogo} alt="SCP Logo" />
@@ -146,8 +163,17 @@ function ScpNav() {
                                     </NavDropdown>
                                 </Col>
                                 <Col sm>
-                                    <FormControl type="text" id="ScpNavForm" placeholder="Search" className="mr-sm-2" />
-                                    <Button style={{ marginTop: "2px" }} id="ScpNavButton" variant="outline-success">Search</Button>
+                                    <FormControl name="search" value={search} onChange={(e) => setSearch(e.target.value)} type="text" id="ScpNavForm" placeholder="Search" className="mr-sm-2" />
+                                    <Button ref={target} style={{ marginTop: "2px" }} onClick={(e) => { onSearchHandler(e) }} id="ScpNavButton">Search</Button>
+                                    <Overlay target={target.current} show={tooltip} placement="bottom">
+                                        {tooltip === true
+                                            ? <Tooltip>
+                                                Write at least one character <br />in the form to search
+                                            </Tooltip>
+                                            : ""
+                                        }
+                                    </Overlay>
+
                                 </Col>
                                 <div style={{ marginLeft: '40px' }}>
                                     <Col sm={4}>
@@ -168,7 +194,7 @@ function ScpNav() {
                     </Navbar.Collapse>
                 </Navbar >
                 : <Navbar bg="light" expand="lg" >
-                    <Navbar.Brand href="/">
+                    <Navbar.Brand href="/home">
                         <Row>
                             <Col sm={4}>
                                 <img id="ScpNavImg" src={NavLogo} alt="SCP Logo" />
@@ -279,8 +305,15 @@ function ScpNav() {
                                     </NavDropdown>
                                 </Col>
                                 <Col sm>
-                                    <FormControl type="text" id="ScpNavForm" placeholder="Search" className="mr-sm-2" />
-                                    <Button id="ScpNavButton" variant="outline-success" style={{ marginTop: "2.5px" }}>Search</Button>
+                                    <FormControl name="search" value={search} onChange={(e) => setSearch(e.target.value)} type="text" id="ScpNavForm" placeholder="Search" className="mr-sm-2" />
+                                    <Button ref={target} onClick={(e) => { onSearchHandler(e) }} id="ScpNavButton" variant="outline-success" style={{ marginTop: "2.5px" }}>Search</Button>
+                                    <Overlay target={target.current} show={tooltip} placement="bottom">
+                                        {(props) => (
+                                            <Tooltip {...props}>
+                                                Write at least one character <br />in the form to search
+                                            </Tooltip>
+                                        )}
+                                    </Overlay>
                                 </Col>
                                 <div style={{ marginLeft: '55px' }}>
                                     <Col sm={4} >
@@ -293,9 +326,10 @@ function ScpNav() {
                             </Nav>
                         </Row>
                     </Navbar.Collapse>
-                </Navbar >}
+                </Navbar >
+            }
 
-        </div>
+        </div >
     );
 }
 

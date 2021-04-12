@@ -13,10 +13,13 @@ import ForumPage from "./pages/ForumPage"
 import NewForum from "./pages/NewForum"
 import NewScp from "./pages/NewScp"
 import DocumentPage from "./pages/DocumentPage"
+import NewDocumentPage from "./pages/NewDocumentPage"
+import UserPage from "./pages/UserPage"
+import ProfilePage from "./pages/ProfilePage"
+import SearchPage from "./pages/SearchPage"
 
 import ScpNav from "./components/ScpNav"
 import ScpFooter from "./components/ScpFooter"
-
 
 class App extends PureComponent {
 
@@ -25,21 +28,50 @@ class App extends PureComponent {
     return (
       <Router>
         <Container>
-          <Route path={["/", "/scp/:scpId/doc/:docId", "/new/forum", "/new/scp", "/scp/:id", "/forum/:id"]} exact component={ScpNav} />
-          <Route path="/" exact component={Home} />
-          {/* Document pages */}
-          <Route path="/scp/:scpId/doc/:docId" exact component={DocumentPage} />
+          {/* Navbar */}
+          <Route width={{ marginBottom: "15px" }} path={[
+            "/new/forum",
+            "/new/scp",
+            "/scp/:id",
+            "/new/:scpId/doc/",
+            "/forum/:id",
+            "/doc/:id",
+            "/user/:id",
+            "/me",
+            "/search/:data",
+            "/home"
+          ]} exact component={ScpNav} />
+          {/* Home */}
+          <Route path="/home" exact component={Home} />
+          {/* Profile pages */}
+          <Route path="/me" exact component={UserPage} />
+          <Route path="/user/:id" exact component={ProfilePage} />
           {/* Post pages */}
+          <Route path="/new/:scpId/doc/" exact component={NewDocumentPage} />
           <Route path="/new/forum" exact component={NewForum} />
           <Route path="/new/scp" exact component={NewScp} />
           {/* Auth pages */}
           <Route path="/login" exact component={Login} />
           <Route path="/signup" exact component={Signup} />
           {/* Single pages */}
+          <Route path="/doc/:id" exact component={DocumentPage} />
           <Route path="/scp/:id" exact component={Scpage} />
           <Route path="/forum/:id" exact component={ForumPage} />
+          <Route path="/search/:data" exact component={SearchPage} />
+          {/* Footer */}
+          <Route path={[
+            "/new/forum",
+            "/new/scp",
+            "/scp/:id",
+            "/new/:scpId/doc/",
+            "/forum/:id",
+            "/doc/:id",
+            "/user/:id",
+            "/me",
+            "/search/:data",
+            "/home"
+          ]} exact component={ScpFooter} />
         </Container>
-        <Route path={["/", "/scp/:scpId/doc/:docId", "/new/forum", "/new/scp", "/login", "/signup", "/scp/:id", "/forum/:id"]} exact component={ScpFooter} />
       </Router>
     );
   }

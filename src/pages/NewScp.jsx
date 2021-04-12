@@ -75,7 +75,8 @@ class NewScp extends PureComponent {
                             Your new SCP must have a new item number, an example would be:
                             If your new SCP it's SCP-012, but we have SCP-012 and SCP-013, then you need to create SCP-014.
                             The description must meet the object class, you shouldn't write that an SCP kills everyone but it's a safe/thaumiel class.
-                        Containment procedures are not strictly needed, but still, we suggest to put them in. </p>
+                            Containment procedures are not strictly needed, but still, we suggest to put them in. </p>
+                            <p>We use markdown! Don't know how to use it? click <a href="https://www.markdownguide.org/getting-started/">here</a> to learn how to!</p>
                         </Col>
                         <Col>
                             <Row>
@@ -102,7 +103,6 @@ class NewScp extends PureComponent {
                                     <br />
                                     <p> An SCP CAN'T have</p>
                                     <span className="ScpRuleList" >
-                                        <li>- An object class</li>
                                         <li>- The same item number as another scp</li>
                                     </span>
                                 </Col>

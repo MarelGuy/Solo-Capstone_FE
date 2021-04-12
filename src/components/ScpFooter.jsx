@@ -3,9 +3,9 @@ import React, { PureComponent } from 'react'
 class ScpFooter extends PureComponent {
     render() {
         return (
-            <footer>
-                <p>Powered by <a href="https://www.twitch.tv/marelguy">twitch.tv/marelguy</a></p>
-                <p id="ScpGithubFooter" ><a href="https://www.github.com/MarelGuy">GitHub</a></p>
+            <footer style={{ marginTop: "15px", }}>
+                <h3>This is a clone of <a href="http://scp-wiki.wikidot.com">scpwiki.com</a></h3>
+                <p>All copyright belongs to their respective owners. <br /> For infos please contact the owner of the website</p>
             </footer>
         )
     }
