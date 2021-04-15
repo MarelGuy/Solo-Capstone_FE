@@ -113,7 +113,7 @@ class ForumPage extends PureComponent {
                         'content-type': 'application/json'
                     }
                 };
-                await axios.post("http://127.0.0.1:3005/forum/like/" + id, body, config).catch((err) => {
+                await axios.post(process.env.REACT_APP_API_URL + "/forum/like/" + id, body, config).catch((err) => {
                     console.log(err)
                 })
             } catch (error) {

@@ -17,6 +17,7 @@ import NewDocumentPage from "./pages/NewDocumentPage"
 import UserPage from "./pages/UserPage"
 import ProfilePage from "./pages/ProfilePage"
 import SearchPage from "./pages/SearchPage"
+import ScpEditPage from "./pages/ScpEditPage"
 
 import ScpNav from "./components/ScpNav"
 import ScpFooter from "./components/ScpFooter"
@@ -41,7 +42,10 @@ class App extends PureComponent {
               "/user/:id",
               "/me",
               "/search/:data",
-              "/home"
+              "/home",
+              "/scp/:id/edit",
+              "/doc/:id/edit",
+              "/forum/:id/edit"
             ]} exact component={ScpNav} />
             {/* Home */}
             <Route path="/home" exact component={Home} />
@@ -55,6 +59,8 @@ class App extends PureComponent {
             {/* Auth pages */}
             <Route path="/login" exact component={Login} />
             <Route path="/signup" exact component={Signup} />
+            {/* Edit pages */}
+            <Route path="/scp/:id/edit" exact component={ScpEditPage} />
             {/* Single pages */}
             <Route path="/doc/:id" exact component={DocumentPage} />
             <Route path="/scp/:id" exact component={Scpage} />
@@ -71,7 +77,10 @@ class App extends PureComponent {
               "/user/:id",
               "/me",
               "/search/:data",
-              "/home"
+              "/home",
+              "/scp/:id/edit",
+              "/doc/:id/edit",
+              "/forum/:id/edit"
             ]} exact component={ScpFooter} />
           </Container>
         </Router>

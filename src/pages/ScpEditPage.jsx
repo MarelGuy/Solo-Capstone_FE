@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react'
-import { Col, Row, Form, Button } from 'react-bootstrap';
+import { Col, Row, Form, Button, Container } from 'react-bootstrap';
 import MarkdownIt from 'markdown-it'
 import MdEditor from 'react-markdown-editor-lite'
 import 'react-markdown-editor-lite/lib/index.css';
@@ -10,11 +10,10 @@ class NewScp extends PureComponent {
         super(props)
         this.state = {
             user: {},
+            scp: {},
             content: "",
             mdContent: "",
-            item: "",
-            redirect: false,
-            scpId: ""
+            redirect: false
         }
     }
 
@@ -31,24 +30,25 @@ class NewScp extends PureComponent {
             .then((res) => {
                 this.setState({ user: res.data })
             })
+        axios.get(process.env.REACT_APP_API_URL + "/scp/" + this.props.match.params.id, config)
+            .then((res) => {
+                this.setState({ scp: res.data })
+                this.setState({ mdContent: res.data.mdContent })
+            })
     }
 
-    onFormChangeHandler = (e) => {
-        this.setState({ content: e.html })
-        this.setState({ mdContent: e.text })
+    onFormChangeHandler = ({ html, text }) => {
+        this.setState({ content: html })
+        this.setState({ mdContent: text })
     }
 
-    onItemChangeHandler = (e) => {
-        this.setState({ item: e.target.value });
-    }
 
     onSubmitHandler = async (e) => {
         e.preventDefault();
         const rawBody = {
             user: this.state.user._id,
             content: this.state.content,
-            mdContent: this.state.mdContent,
-            item: this.state.item
+            mdContent: this.state.mdContent
         }
         const body = JSON.stringify(rawBody)
         const config = {
@@ -56,9 +56,9 @@ class NewScp extends PureComponent {
                 'content-type': 'application/json'
             }
         };
-        axios.post(process.env.REACT_APP_API_URL + "/scp/", body, config)
+        axios.put(process.env.REACT_APP_API_URL + "/scp/" + this.props.match.params.id, body, config)
             .then((res) => {
-                this.setState({ scpId: res.data, redirect: true })
+                this.setState({ redirect: true })
             }).catch((error) => {
                 console.log(error);
             });
@@ -66,10 +66,10 @@ class NewScp extends PureComponent {
 
     render() {
         const mdParser = new MarkdownIt()
-        const { item, redirect, scpId } = this.state
+        const { redirect, scp } = this.state
         return (
             <div id="NewScpPage">
-                <div>{redirect === false ? "" : <Redirect to={"/scp/" + scpId} />}</div>
+                <div>{redirect === false ? "" : <Redirect to={"/scp/" + scp._id} />}</div>
                 <Form>
                     <Row>
                         <Col>
@@ -117,19 +117,16 @@ class NewScp extends PureComponent {
                             style={{ height: "500px" }}
                             renderHTML={(text) => mdParser.render(text)}
                             onChange={(e) => this.onFormChangeHandler(e)}
+                            value={this.state.mdContent}
                         />
                     </Form.Group>
                     <Form.Group as={Row} controlId="formHorizontalEmail">
-                        <Form.Label column sm={2}>Item number:</Form.Label>
-                        <Col sm={8.5}>
-                            <Form.Control value={item} required onChange={(e) => this.onItemChangeHandler(e)} />
-                        </Col>
-                        <Col >
-                            <Button className="ScpNavButton" onClick={(e) => { this.onSubmitHandler(e) }}>Submit</Button>
-                        </Col>
+                        <Container>
+                            <Button className="ScpEditPageSubmitButton" onClick={(e) => { this.onSubmitHandler(e) }}>Submit</Button>
+                        </Container>
                     </Form.Group >
                 </Form>
-            </div >
+            </div>
         )
     }
 }

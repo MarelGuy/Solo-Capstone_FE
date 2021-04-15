@@ -12,8 +12,6 @@ class NewForum extends PureComponent {
         this.state = {
             user: {},
             threadContent: "",
-            isLiked: false,
-            isFav: false,
             redirect: false,
             category: "",
             title: "",

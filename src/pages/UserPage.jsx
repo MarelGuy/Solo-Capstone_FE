@@ -17,7 +17,7 @@ class UserPage extends PureComponent {
             scpFavs: "",
             docFavs: "",
             forumFavs: "",
-            redirect: false
+            redirect: false,
         }
     }
 
@@ -109,15 +109,14 @@ class UserPage extends PureComponent {
     onDescSubmitHandler = async (e) => {
         e.preventDefault(e)
         const userId = this.state.user._id
-        const body = {
+        const body = JSON.stringify({
             userDesc: this.state.description
-        }
+        })
         const config = {
             headers: {
                 'Content-Type': 'application/json'
             }
         }
-        // console.log(body)
         axios.put(process.env.REACT_APP_API_URL + "/user/add-desc/" + userId, body, config)
             .then((res) => {
                 console.log(res)
@@ -149,7 +148,6 @@ class UserPage extends PureComponent {
             scpFavs,
             forumFavs,
             docFavs,
-            description,
             redirect
         } = this.state
         return (
@@ -275,7 +273,7 @@ class UserPage extends PureComponent {
                                         <Form>
                                             <Form.Group>
                                                 <Form.Label>Add a description</Form.Label>
-                                                <Form.Control name="description" value={description} onChange={(e) => this.onChangeHandler(e)} as="textarea" />
+                                                <Form.Control name="description" value={user.userDesc} onChange={(e) => this.onChangeHandler(e)} as="textarea" />
                                             </Form.Group>
                                             <Button className="EDButton" onClick={(e) => this.onDescSubmitHandler(e)}>Submit</Button>
                                         </Form>

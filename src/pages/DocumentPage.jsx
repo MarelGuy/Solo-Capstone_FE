@@ -98,7 +98,7 @@ class DocPage extends PureComponent {
                         'content-type': 'application/json'
                     }
                 };
-                await axios.post("http://127.0.0.1:3005/doc/like/" + id, body, config).catch((err) => {
+                await axios.post(process.env.REACT_APP_API_URL + "/ doc/like/" + id, body, config).catch((err) => {
                     console.log(err)
                 })
             } catch (error) {

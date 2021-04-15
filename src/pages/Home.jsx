@@ -40,7 +40,7 @@ class Home extends PureComponent {
                     Be aware of your ranking level.</p>
                     <hr />
                     <p>Want to create an scp? click <a href="/new/scp">HERE</a> to create one.<br />
-                    Want to create a forum? click <a href="/new/forum">HERE</a>to create one</p>
+                    Want to create a forum? click <a href="/new/forum">HERE</a> to create one</p>
                 </div>
                 <hr />
             </div>

@@ -108,7 +108,7 @@ class Scpage extends PureComponent {
                         'content-type': 'application/json'
                     }
                 };
-                await axios.post("http://127.0.0.1:3005/scp/like/" + id, body, config).catch((err) => {
+                await axios.post(process.env.REACT_APP_API_URL + "/scp/like/" + id, body, config).catch((err) => {
                     console.log(err)
                 })
             } catch (error) {
@@ -177,7 +177,7 @@ class Scpage extends PureComponent {
                     return (
                         <Card style={{ width: '100%', marginTop: '10px' }}>
                             <Card.Body>
-                                <Button className="EDButton">Edit</Button>
+                                <Button className="EDButton" href={`/scp/${this.props.match.params.id}/edit/`}>Edit</Button>
                                 <Button className="EDButton" style={{ marginTop: "7.5px" }} onClick={(e) => this.openModal(e)}>Delete</Button>
                                 <Button className="EDButton" style={{ marginTop: "7.5px" }} href={`/new/${this.props.match.params.id}/doc/`}>Add Document</Button>
                             </Card.Body>
@@ -187,7 +187,6 @@ class Scpage extends PureComponent {
                 }
             }
         }
-        console.log(scp.user)
         return (
             <div>
                 <Modal
@@ -215,7 +214,7 @@ class Scpage extends PureComponent {
                             <Col sm={3}>
                                 <Card style={{ width: '100%' }}>
                                     <Card.Body>
-                                        <p>Posted by: <br /> <a href={scp.user ? `/user/${scp.user._id}` : ""}>{scp.user ? scp.user.nickname : "loading..."}</a></p>
+                                        <p>Posted by: <br /> <a href={scp.user ? `/user/${scp.user._id}` : ""}>{scp.user ? scp.user.nickname : "Not found"}</a></p>
                                         <p>Documents: {isLoading === true ? "loading..." : scp.linked_Documents.length} {
                                             isLoading === true
                                                 ? ""

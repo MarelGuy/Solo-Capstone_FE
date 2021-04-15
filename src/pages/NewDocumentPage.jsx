@@ -55,7 +55,7 @@ class NewDocumentPage extends PureComponent {
                 'content-type': 'application/json'
             }
         };
-        axios.post("http://127.0.0.1:3005/doc/" + this.props.match.params.scpId, body, config)
+        axios.post(process.env.REACT_APP_API_URL + "/doc/" + this.props.match.params.scpId, body, config)
             .then((res) => {
                 this.setState({ docId: res.data, redirect: true })
             }).catch((error) => {
