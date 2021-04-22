@@ -20,12 +20,10 @@ class Scpage extends PureComponent {
 
     componentDidMount() {
         const id = this.props.match.params.id
-        const accessToken = localStorage.getItem('accessToken')
-        const refreshToken = localStorage.getItem('refreshToken')
         const config = {
             headers: {
-                accessToken: accessToken,
-                refreshToken: refreshToken
+                accessToken: localStorage.getItem('accessToken'),
+                refreshToken: localStorage.getItem('refreshToken')
             }
         }
         axios.get(process.env.REACT_APP_API_URL + "/scp/" + id)
@@ -43,6 +41,23 @@ class Scpage extends PureComponent {
             })
             .catch((error) => {
                 console.log(error)
+            })
+    }
+
+    componentDidUpdate(prevProps, prevState) {
+        if (prevState.scp.likes !== this.state.scp.likes)
+            this.setState({
+                scp: {
+                    ...this.state.scp,
+                    likes: this.state.scp.likes
+                }
+            })
+        if (prevState.user.scpFavourites !== this.state.user.scpFavourites)
+            this.setState({
+                user: {
+                    ...this.state.user,
+                    scpFavourites: this.state.user.scpFavourites
+                }
             })
     }
 
@@ -70,100 +85,64 @@ class Scpage extends PureComponent {
 
     isLiked = () => {
         if (this.state.scp.likes) {
-            const check = this.state.scp.likes.find(like => like.userId === this.state.user._id)
-            if (check === undefined || check === null)
-                return false
-            else
-                return true
+            if (this.state.scp.likes.findIndex(like => like.userId === this.state.user._id) === -1)
+                return "Like"
+            return "Unlike"
         }
     }
 
     toggleLike = async (e) => {
         e.preventDefault(e)
-        const liked = this.isLiked()
-        const prevScp = this.state.scp
-        const id = this.props.match.params.id
-        if (liked === true) {
-            try {
-                const like = this.state.scp.likes.find(like => like.userId === this.state.user._id)
-                await axios.delete(process.env.REACT_APP_API_URL + "/scp/like/" + id + "/" + like._id)
-            } catch (error) {
-                console.log(error)
-                this.setState({ scp: prevScp })
+        try {
+            const id = this.props.match.params.id
+            const body = {
+                userId: this.state.user._id
             }
-        } else {
-            this.setState(state => ({
-                scp: {
-                    ...state.scp,
-                    likes: state.scp.likes.filter(like => like.userId !== this.state.user._id)
+            const config = {
+                headers: {
+                    accessToken: localStorage.getItem('accessToken'),
+                    refreshToken: localStorage.getItem('refreshToken')
                 }
-            }))
-            try {
-                const rawBody = {
-                    userId: this.state.user._id
-                }
-                const body = JSON.stringify(rawBody)
-                const config = {
-                    headers: {
-                        'content-type': 'application/json'
-                    }
-                };
-                await axios.post(process.env.REACT_APP_API_URL + "/scp/like/" + id, body, config).catch((err) => {
-                    console.log(err)
-                })
-            } catch (error) {
-                console.log(error)
             }
+            const response = await axios.post(process.env.REACT_APP_API_URL + "/scp/like/" + id, body, config);
+            const data = response.data
+            if (!data.errors) {
+                this.setState({ scp: data, isLoading: false })
+            }
+        } catch (error) {
+            console.log(error)
+            const prevScp = this.state.scp
+            this.setState({ scp: prevScp })
         }
     }
 
     isFav = () => {
         if (this.state.user.scpFavourites) {
-            const check = this.state.user.scpFavourites.find(fav => fav === this.state.scp._id)
-            if (check === undefined || check === null)
-                return false
-            else
-                return true
-
+            if (this.state.user.scpFavourites.findIndex(fav => fav === this.state.scp._id) === -1)
+                return "Favourite"
+            return "Unfavourite"
         }
     }
 
     toggleFav = async (e) => {
         e.preventDefault(e)
-        const favved = this.isFav()
-        const fav = this.state.user.scpFavourites.find(fav => fav === this.state.scp._id)
-        const prevUser = this.state.user
-        const id = this.props.match.params.id
-        const userId = this.state.user._id
-        if (favved === true) {
-            this.setState(state => ({
-                user: {
-                    ...state.user,
-                    user: state.user.scpFavourites.filter(fav => fav.scpId === this.state.scp._id)
+        try {
+            const id = this.props.match.params.id
+            const config = {
+                headers: {
+                    accessToken: localStorage.getItem('accessToken'),
+                    refreshToken: localStorage.getItem('refreshToken')
                 }
-            }))
-            try {
-                await axios.delete(process.env.REACT_APP_API_URL + "/user/fav/scp/" + userId + "/" + fav,)
-            } catch (error) {
-                console.log(error)
-                this.setState({ user: prevUser })
             }
-        } else {
-            try {
-                const body = JSON.stringify({
-                    _id: id
-                })
-                const config = {
-                    headers: {
-                        'content-type': 'application/json'
-                    }
-                };
-                await axios.post(process.env.REACT_APP_API_URL + "/user/fav/scp/" + userId, body, config).catch((err) => {
-                    console.log(err)
-                })
-            } catch (error) {
-                console.log(error)
+            const response = await axios.post(process.env.REACT_APP_API_URL + "/user/fav/scp/" + id, null, config);
+            const data = response.data
+            if (!data.errors) {
+                this.setState({ user: data, isLoading: false })
             }
+        } catch (error) {
+            console.log(error)
+            const prevUser = this.state.user
+            this.setState({ user: prevUser })
         }
     }
 
@@ -187,6 +166,7 @@ class Scpage extends PureComponent {
                 }
             }
         }
+
         return (
             <div>
                 <Modal
@@ -219,7 +199,7 @@ class Scpage extends PureComponent {
                                             isLoading === true
                                                 ? ""
                                                 : scp.linked_Documents.map((document) => {
-                                                    return <li key={`list-item-${uniqid()}`}><a className="ScpGreyAnchor" href={`/doc/${document._id}`}>{document.title}</a></li>
+                                                    return <li style={{ marginLeft: "25px" }} key={`list-item-${uniqid()}`}><a className="ScpGreyAnchor" href={`/doc/${document._id}`}>{document.title}</a></li>
                                                 })
                                         }</p>
                                         <p>Rating: {isLoading === true ? "loading..." : scp.likes.length}</p>
@@ -230,14 +210,10 @@ class Scpage extends PureComponent {
                                 <Card style={{ width: '100%', marginTop: '10px' }}>
                                     <Card.Body>
                                         <Button className="EDButton" onClick={(e) => this.toggleLike(e)}>{
-                                            this.isLiked() === true
-                                                ? "Unlike"
-                                                : "Like"
+                                            this.isLiked()
                                         }</Button>
-                                        <Button style={{ marginTop: '10px' }} className="EDButton" onClick={(e) => this.toggleFav(e)}>{
-                                            this.isFav() === true
-                                                ? "Unfavourite"
-                                                : "Favourite"
+                                        <Button className="EDButton" style={{ marginTop: '10px' }} onClick={(e) => this.toggleFav(e)}>{
+                                            this.isFav()
                                         }</Button>
                                     </Card.Body>
                                 </Card>

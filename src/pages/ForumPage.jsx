@@ -50,6 +50,23 @@ class ForumPage extends PureComponent {
 
     }
 
+    componentDidUpdate(prevProps, prevState) {
+        if (prevState.forum.likes !== this.state.forum.likes)
+            this.setState({
+                forum: {
+                    ...this.state.forum,
+                    likes: this.state.forum.likes
+                }
+            })
+        if (prevState.user.forumFavourites !== this.state.user.forumFavourites)
+            this.setState({
+                user: {
+                    ...this.state.user,
+                    forumFavourites: this.state.user.forumFavourites
+                }
+            })
+    }
+
     openModal = (e) => {
         if (e)
             e.preventDefault(e)
@@ -75,102 +92,65 @@ class ForumPage extends PureComponent {
 
     isLiked = () => {
         if (this.state.forum.likes) {
-            const check = this.state.forum.likes.find(like => like.userId === this.state.user._id)
-            if (check === undefined || check === null)
-                return false
-            else
-                return true
+            if (this.state.forum.likes.findIndex(like => like.userId === this.state.user._id) === -1)
+                return "Like"
+            return "Unlike"
         }
     }
 
     toggleLike = async (e) => {
         e.preventDefault(e)
-        const liked = this.isLiked()
-        const prevForum = this.state.forum
-        const id = this.props.match.params.id
-        if (liked === true) {
-            try {
-                const like = this.state.forum.likes.find(like => like.userId === this.state.user._id)
-                await axios.delete(process.env.REACT_APP_API_URL + "/forum/like/" + id + "/" + like._id)
-            } catch (error) {
-                console.log(error)
-                this.setState({ forum: prevForum })
+        try {
+            const id = this.props.match.params.id
+            const body = {
+                userId: this.state.user._id
             }
-        } else {
-            this.setState(state => ({
-                scp: {
-                    ...state.forum,
-                    likes: state.forum.likes.filter(like => like.userId !== this.state.user._id)
+            const config = {
+                headers: {
+                    accessToken: localStorage.getItem('accessToken'),
+                    refreshToken: localStorage.getItem('refreshToken')
                 }
-            }))
-            try {
-                const rawBody = {
-                    userId: this.state.user._id
-                }
-                const body = JSON.stringify(rawBody)
-                const config = {
-                    headers: {
-                        'content-type': 'application/json'
-                    }
-                };
-                await axios.post(process.env.REACT_APP_API_URL + "/forum/like/" + id, body, config).catch((err) => {
-                    console.log(err)
-                })
-            } catch (error) {
-                console.log(error)
             }
+            const response = await axios.post(process.env.REACT_APP_API_URL + "/forum/like/" + id, body, config);
+            const data = response.data
+            if (!data.errors) {
+                this.setState({ forum: data, isLoading: false })
+            }
+        } catch (error) {
+            console.log(error)
+            const prevForum = this.state.forum
+            this.setState({ forum: prevForum })
         }
     }
 
     isFav = () => {
         if (this.state.user.forumFavourites) {
-            const check = this.state.user.forumFavourites.find(fav => fav === this.state.forum._id)
-            if (check === undefined || check === null)
-                return false
-            else
-                return true
-
+            if (this.state.user.forumFavourites.findIndex(fav => fav === this.state.forum._id) === -1)
+                return "Favourite"
+            return "Unfavourite"
         }
     }
 
     toggleFav = async (e) => {
         e.preventDefault(e)
-        const favved = this.isFav()
-        const fav = this.state.user.forumFavourites.find(fav => fav === this.state.forum._id)
-        const prevUser = this.state.user
-        const id = this.props.match.params.id
-        const userId = this.state.user._id
-        if (favved === true) {
-            this.setState(state => ({
-                user: {
-                    ...state.user,
-                    user: state.user.forumFavourites.filter(fav => fav.forumId === this.state.forum._id)
+        try {
+            const id = this.props.match.params.id
+            const config = {
+                headers: {
+                    accessToken: localStorage.getItem('accessToken'),
+                    refreshToken: localStorage.getItem('refreshToken')
                 }
-            }))
-            try {
-                await axios.delete(process.env.REACT_APP_API_URL + "/user/fav/scp/" + userId + "/" + fav,)
-            } catch (error) {
-                console.log(error)
-                this.setState({ user: prevUser })
             }
-        } else {
-            try {
-                const body = JSON.stringify({
-                    _id: id
-                })
-                const config = {
-                    headers: {
-                        'content-type': 'application/json'
-                    }
-                };
-                await axios.post(process.env.REACT_APP_API_URL + "/user/fav/scp/" + userId, body, config).catch((err) => {
-                    console.log(err)
-                })
-            } catch (error) {
-                console.log(error)
+            const response = await axios.post(process.env.REACT_APP_API_URL + "/user/fav/forum/" + id, null, config);
+            const data = response.data
+            if (!data.errors) {
+                this.setState({ user: data, isLoading: false })
             }
+        } catch (error) {
+            console.log(error)
+            const prevUser = this.state.user
+            this.setState({ user: prevUser })
         }
-        console.log("eek")
     }
 
     onFormChangeHandler = (e) => {
@@ -219,7 +199,6 @@ class ForumPage extends PureComponent {
         const displayComments = () => {
             return (
                 forum.comments.map((comment) => {
-                    console.log(comment)
                     if (comment.userId === null)
 
                         return (
@@ -274,7 +253,7 @@ class ForumPage extends PureComponent {
                             <Col sm={3}>
                                 <Card style={{ width: '100%' }}>
                                     <Card.Body>
-                                        <p>Posted by: <br /> <a href={forum.user ? `/user/${forum.user._id}` : ""}>{forum.user ? forum.user.nickname : "loading..."}</a></p>
+                                        <p>Posted by: <br /> <a href={forum.user ? `/user/${forum.user._id}` : ""}>{forum.user ? forum.user.nickname : "Not found"}</a></p>
                                         {rating()}
                                         <hr />
                                         <a className="GreyAnchor" href="/home"><p className="Anchors">Main</p> </a>
@@ -284,13 +263,9 @@ class ForumPage extends PureComponent {
                                     <Card.Body>
                                         <Button className="EDButton" onClick={(e) => this.toggleLike(e)}>{
                                             this.isLiked()
-                                                ? "Unlike"
-                                                : "Like"
                                         }</Button>
                                         <Button style={{ marginTop: '10px' }} className="EDButton" onClick={(e) => this.toggleFav(e)}>{
                                             this.isFav()
-                                                ? "Unfavourite"
-                                                : "Favourite"
                                         }</Button>
                                     </Card.Body>
                                 </Card>

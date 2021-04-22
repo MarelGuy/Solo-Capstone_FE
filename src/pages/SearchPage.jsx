@@ -63,7 +63,7 @@ class SearchPage extends PureComponent {
                 if (result.scps.length > 0) {
                     const scps = result.scps.map(scp => {
                         return (
-                            <a href={`/scp/${scp._id}`}>
+                            <a key={uniqid()} href={`/scp/${scp._id}`}>
                                 <Card key={uniqid()} className="text-center SCPSearchComponent">
                                     <Card.Body>
                                         {scp.item}
@@ -89,7 +89,7 @@ class SearchPage extends PureComponent {
                 if (result.forums.length > 0) {
                     const forums = result.forums.map(forum => {
                         return (
-                            <a href={`/forum/${forum._id}`}>
+                            <a key={uniqid()} href={`/forum/${forum._id}`}>
                                 <Card key={uniqid()} className="text-center SCPSearchComponent">
                                     <Card.Body>
                                         {forum.title}
@@ -115,7 +115,7 @@ class SearchPage extends PureComponent {
                 if (result.docs.length > 0) {
                     const docs = result.docs.map(doc => {
                         return (
-                            <a href={`/doc/${doc._id}`}>
+                            <a key={uniqid()} href={`/doc/${doc._id}`}>
                                 <Card key={uniqid()} className="text-center SCPSearchComponent">
                                     <Card.Body>
                                         {doc.item}
@@ -141,7 +141,7 @@ class SearchPage extends PureComponent {
                 if (result.scpDocs.length > 0) {
                     const scpDocs = result.scpDocs.map(scpDoc => {
                         return (
-                            <a href={`/doc/${scpDoc._id}`}>
+                            <a key={uniqid()} href={`/doc/${scpDoc._id}`}>
                                 <Card key={uniqid()} className="text-center SCPSearchComponent">
                                     <Card.Body>
                                         {scpDoc.item}
@@ -167,7 +167,7 @@ class SearchPage extends PureComponent {
                 if (result.users.length > 0) {
                     const users = result.users.map(user => {
                         return (
-                            <a href={`/user/${user._id}`}>
+                            <a key={uniqid()} href={`/user/${user._id}`}>
                                 <Card key={uniqid()} className="text-center SCPSearchComponent">
                                     <Card.Body>
                                         {user.nickname}

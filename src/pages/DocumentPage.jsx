@@ -22,17 +22,32 @@ class DocPage extends PureComponent {
                     this.setState({ doc: res.data, isLoading: false });
                 console.log(res)
             });
-        const accessToken = localStorage.getItem("accessToken")
-        const refreshToken = localStorage.getItem("refreshToken")
         const config = {
             headers: {
-                accessToken: accessToken,
-                refreshToken: refreshToken,
+                accessToken: localStorage.getItem('accessToken'),
+                refreshToken: localStorage.getItem('refreshToken')
             }
         }
         axios.get(process.env.REACT_APP_API_URL + "/user/me", config)
             .then((res) => {
                 this.setState({ user: res.data })
+            })
+    }
+
+    componentDidUpdate(prevProps, prevState) {
+        if (prevState.doc.likes !== this.state.doc.likes)
+            this.setState({
+                doc: {
+                    ...this.state.doc,
+                    likes: this.state.doc.likes
+                }
+            })
+        if (prevState.user.docFavourites !== this.state.user.docFavourites)
+            this.setState({
+                user: {
+                    ...this.state.user,
+                    docFavourites: this.state.user.docFavourites
+                }
             })
     }
 
@@ -60,100 +75,64 @@ class DocPage extends PureComponent {
 
     isLiked = () => {
         if (this.state.doc.likes) {
-            const check = this.state.doc.likes.find(like => like.userId === this.state.user._id)
-            if (check === undefined || check === null)
-                return false
-            else
-                return true
+            if (this.state.doc.likes.findIndex(like => like.userId === this.state.user._id) === -1)
+                return "Like"
+            return "Unlike"
         }
     }
 
     toggleLike = async (e) => {
         e.preventDefault(e)
-        const liked = this.isLiked()
-        const prevDoc = this.state.doc
-        const id = this.props.match.params.id
-        if (liked === true) {
-            try {
-                const like = this.state.doc.likes.find(like => like.userId === this.state.user._id)
-                await axios.delete(process.env.REACT_APP_API_URL + "/doc/like/" + id + "/" + like._id)
-            } catch (error) {
-                console.log(error)
-                this.setState({ doc: prevDoc })
+        try {
+            const id = this.props.match.params.id
+            const body = {
+                userId: this.state.user._id
             }
-        } else {
-            this.setState(state => ({
-                doc: {
-                    ...state.doc,
-                    likes: state.doc.likes.filter(like => like.userId !== this.state.user._id)
+            const config = {
+                headers: {
+                    accessToken: localStorage.getItem('accessToken'),
+                    refreshToken: localStorage.getItem('refreshToken')
                 }
-            }))
-            try {
-                const rawBody = {
-                    userId: this.state.user._id
-                }
-                const body = JSON.stringify(rawBody)
-                const config = {
-                    headers: {
-                        'content-type': 'application/json'
-                    }
-                };
-                await axios.post(process.env.REACT_APP_API_URL + "/ doc/like/" + id, body, config).catch((err) => {
-                    console.log(err)
-                })
-            } catch (error) {
-                console.log(error)
             }
+            const response = await axios.post(process.env.REACT_APP_API_URL + "/doc/like/" + id, body, config);
+            const data = response.data
+            if (!data.errors) {
+                this.setState({ doc: data, isLoading: false })
+            }
+        } catch (error) {
+            console.log(error)
+            const prevDoc = this.state.doc
+            this.setState({ doc: prevDoc })
         }
     }
 
     isFav = () => {
         if (this.state.user.docFavourites) {
-            const check = this.state.user.docFavourites.find(fav => fav === this.state.scp._id)
-            if (check === undefined || check === null)
-                return false
-            else
-                return true
-
+            if (this.state.user.docFavourites.findIndex(fav => fav === this.state.doc._id) === -1)
+                return "Favourite"
+            return "Unfavourite"
         }
     }
 
     toggleFav = async (e) => {
         e.preventDefault(e)
-        const favved = this.isFav()
-        const fav = this.state.user.docFavourites.find(fav => fav === this.state.doc._id)
-        const prevUser = this.state.user
-        const id = this.props.match.params.id
-        const userId = this.state.user._id
-        if (favved === true) {
-            this.setState(state => ({
-                user: {
-                    ...state.user,
-                    user: state.user.docFavourites.filter(fav => fav.docId === this.state.doc._id)
+        try {
+            const id = this.props.match.params.id
+            const config = {
+                headers: {
+                    accessToken: localStorage.getItem('accessToken'),
+                    refreshToken: localStorage.getItem('refreshToken')
                 }
-            }))
-            try {
-                await axios.delete(process.env.REACT_APP_API_URL + "/user/fav/doc/" + userId + "/" + fav,)
-            } catch (error) {
-                console.log(error)
-                this.setState({ user: prevUser })
             }
-        } else {
-            try {
-                const body = JSON.stringify({
-                    _id: id
-                })
-                const config = {
-                    headers: {
-                        'content-type': 'application/json'
-                    }
-                };
-                await axios.post(process.env.REACT_APP_API_URL + "/user/fav/scp/" + userId, body, config).catch((err) => {
-                    console.log(err)
-                })
-            } catch (error) {
-                console.log(error)
+            const response = await axios.post(process.env.REACT_APP_API_URL + "/user/fav/doc/" + id, null, config);
+            const data = response.data
+            if (!data.errors) {
+                this.setState({ user: data, isLoading: false })
             }
+        } catch (error) {
+            console.log(error)
+            const prevUser = this.state.user
+            this.setState({ user: prevUser })
         }
     }
 
@@ -210,15 +189,11 @@ class DocPage extends PureComponent {
                                 </Card>
                                 <Card style={{ width: '100%', marginTop: '10px' }}>
                                     <Card.Body>
-                                        <Button className="EDButton" onClick={(e) => this.toggleLike(e)}>{
+                                        <Button className="EDButton" onClick={(e) => this.toggleLike(e, user._id)}>{
                                             this.isLiked()
-                                                ? "Unlike"
-                                                : "Like"
                                         }</Button>
                                         <Button style={{ marginTop: '10px' }} className="EDButton" onClick={(e) => this.toggleFav(e)}>{
                                             this.isFav()
-                                                ? "Unfavourite"
-                                                : "Favourite"
                                         }</Button>
                                         <Button style={{ marginTop: '10px' }} className="EDButton" href={`/scp/${doc.for}`} >View SCP</Button>
                                     </Card.Body>
