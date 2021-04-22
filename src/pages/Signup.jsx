@@ -101,7 +101,7 @@ class Signup extends PureComponent {
                                     <Form.Check label="By registering you accept to keep every information confidential" />
                                 </Form.Group>
                                 <Recaptcha
-                                    sitekey="6LcrrrQaAAAAAL3zS4BkvR2hNN2ljlKW9gWAg8aE"
+                                    sitekey="6LfstLQaAAAAAFe-nR8NKioHtObAtS1u42cLxwLy"
                                 />
                                 <hr />
                                 <Row>
