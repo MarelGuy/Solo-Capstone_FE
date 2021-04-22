@@ -18,6 +18,16 @@ class Signup extends PureComponent {
         }
     }
 
+    // specifying your onload callback function
+    callback() {
+        console.log('Done!!!!');
+    };
+
+    // specifying verify callback function
+    verifyCallback(response) {
+        console.log(response);
+    };
+
     onChangeHandler = (e) => {
         this.setState({ [e.target.name]: e.target.value })
     }
@@ -103,6 +113,8 @@ class Signup extends PureComponent {
                                 <Form.Group required>
                                     <Recaptcha
                                         sitekey="6LfstLQaAAAAAFe-nR8NKioHtObAtS1u42cLxwLy"
+                                        verifyCallback={this.verifyCallback()}
+                                        onloadCallback={this.callback()}
                                     />
                                 </Form.Group>
                                 <hr />
