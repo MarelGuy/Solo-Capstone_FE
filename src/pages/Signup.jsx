@@ -3,7 +3,6 @@ import React, { PureComponent } from 'react';
 import { Redirect } from "react-router-dom";
 import { Button, Card, Col, Form, Row } from 'react-bootstrap'
 import logo from '../assets/images/logos/NavLogo.png'
-import Recaptcha from "react-recaptcha"
 class Signup extends PureComponent {
     constructor(props) {
         super(props)
@@ -111,11 +110,6 @@ class Signup extends PureComponent {
                                     <Form.Check label="By registering you accept to keep every information confidential" />
                                 </Form.Group>
                                 <Form.Group required>
-                                    <Recaptcha
-                                        sitekey="6LfstLQaAAAAAFe-nR8NKioHtObAtS1u42cLxwLy"
-                                        verifyCallback={this.verifyCallback()}
-                                        onloadCallback={this.callback()}
-                                    />
                                 </Form.Group>
                                 <hr />
                                 <Row>
