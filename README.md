@@ -1,70 +1,85 @@
-# Getting Started with Create React App
+# Getting Started with scpwiki
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app) and so it includes every react script to start or build the application
 
-## Available Scripts
+## Available Pages
 
-In the project directory, you can run:
+In the project, you can see:
 
-### `yarn start`
+### `/home`
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+That's the homepage of the website, you can navigate to `/new/scp` and/or `/new/forum`.
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+### `/new/scp`
 
-### `yarn test`
+In this page you can create a new SCP. An SCP it's an entity that defies the laws of physics, in the lore of the official website, you will contain and protect the world from these anomalies by containing them with various types of containment room or procedures. By creating one you will add it to the database and it will be visible in the page `/scp/:scpId`.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### `/new/forum`
 
-### `yarn build`
+In this page you can create a new thread in the forum. This is still a feature in beta and so it may have some bugs, I'll update it in some time. By creating one you will add it to the database and it will be visible in the page `/forum/:forumId`.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### `/new/doc`
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+In this page you can create a new document for a previously created SCP. By creating one you will add it to the database and it will be visible in the page `/doc/:docId`.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### `/scp/:scpId`
 
-### `yarn eject`
+In this page you can see one of the scps you or someone else created. Right now we have two versions of scp:
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+- v0: Beta version of an scp created before the first major update of the scps pages, doesn't support the edit feature and the document feature.
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+- v1: First version of an scp created before the second major update of the scps pages, doesn't support the edit feature and supports the document feature.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+- v2: Second version of an scp created before the major update of the scps pages, it supports the edit feature and the document feature.
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+The majority of the scps are in v2 state but i might add a new version of SCP (v3) that might have more available features.
 
-## Learn More
+### `/forum/:forumId`
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+In this page you can see one of the threads you or someone else created. Right now we have two versions of the forums:
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+- v0: First version of an scp created before the first major update of the threads pages, doesn't support the edit feature.
 
-### Code Splitting
+- v1: Second version of an scp created after the first major update of the threads pages, it supports the edit feature.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+The majority of the threads are in v1 state since this is a secondary feature, i will add the support for the v2 in the next major update.
 
-### Analyzing the Bundle Size
+### `/doc/:docId`
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+In this page you can see one of the documents you or someone else created. Right now we have two versions of the documents:
 
-### Making a Progressive Web App
+- v0: Beta version of a document created before the second major update of the scps pages, doesn't support the edit feature.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+- v1: Second version of a document created before the major update of the scps pages, it supports the edit feature.
 
-### Advanced Configuration
+The majority of the documents are in v1 state, I will add a v2 in the next major update to add external addendums to the documents.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+### `/me`
 
-### Deployment
+In this page you can see your profile information. Also you can add/remove or change your account informations. You can change you profile picture too.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+### `/user/:userId`
 
-### `yarn build` fails to minify
+In this page you can see someone else's profile information. Also if that's you it will say that the account you are watching is your account.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+### `/search/:data`
+
+In this page you can search in the whole database of the website. You can write anything in it and if it finds a match it will display it.
+
+### `/login`
+
+In this page you can login with a previously created account.
+
+### `/signup`
+
+In this page you can create an account. After the creation you will wait 5 seconds to be then redirected to `/login`.
+
+## Known problems
+
+### Navbar is broken and acting like a placeholder
+
+The navbar is meant to be a navigator for the website, right now it's just a placeholder.
+
+### Major bugs in the forum editing
+
+When you want to edit a forum sometimes it crashes and/or doesn't redirect to the edit page.
